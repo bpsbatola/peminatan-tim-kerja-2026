@@ -49,25 +49,7 @@
             font-size: 16px;
         }
 
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #0088cc;
-            border-radius: 8px;
-            font-size: 15px;
-            background-color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        input[type="email"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #0066aa;
-            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
-        }
-        
+    
         select:hover {
             border-color: #0066aa;
         }
@@ -442,7 +424,6 @@
                             <th>No</th>
                             <th>Timestamp</th>
                             <th>Nama</th>
-                            <th>Email</th>
                             <th>Prioritas 1</th>
                             <th>Prioritas 2</th>
                             <th>Prioritas 3</th>
@@ -525,7 +506,6 @@
             }
             
             const nama = document.getElementById('nama').value;
-            const email = document.getElementById('email').value.trim();
             
             const results = [];
             let allFilled = true;
@@ -539,10 +519,6 @@
                 }
             });
             
-            if (!nama || !email || !allFilled) {
-                alert('Mohon lengkapi semua data!');
-                return;
-            }
             
             // Tampilkan loading
             document.getElementById('loading').style.display = 'block';
@@ -561,7 +537,6 @@
                         second: '2-digit'
                     }),
                     Nama: nama,
-                    Email: email,
                     Prioritas1: results[0],
                     Prioritas2: results[1],
                     Prioritas3: results[2],
@@ -616,7 +591,6 @@
             if (success && data) {
                 const items = [
                     `<strong>Nama:</strong> ${data.Nama}`,
-                    `<strong>Email:</strong> ${data.Email}`,
                     `<strong>Prioritas 1:</strong> ${data.Prioritas1}`,
                     `<strong>Prioritas 2:</strong> ${data.Prioritas2}`,
                     `<strong>Prioritas 3:</strong> ${data.Prioritas3}`,
@@ -691,7 +665,6 @@
                     <td>${index + 1}</td>
                     <td>${item.Timestamp || '-'}</td>
                     <td>${item.Nama || '-'}</td>
-                    <td>${item.Email || '-'}</td>
                     <td>${item.Prioritas1 || '-'}</td>
                     <td>${item.Prioritas2 || '-'}</td>
                     <td>${item.Prioritas3 || '-'}</td>
