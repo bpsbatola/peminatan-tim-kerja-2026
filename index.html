@@ -416,9 +416,6 @@
 
             <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
         </form>
-
-        <button class="view-results-btn" onclick="viewResults()">Lihat Semua Data</button>
-
         <div class="loading" id="loading">
             <div class="loading-spinner"></div>
             <p>Memproses data...</p>
@@ -427,14 +424,6 @@
         <div class="result" id="result">
             <h2 id="resultTitle">Data berhasil disimpan!</h2>
             <ul id="resultList"></ul>
-        </div>
-
-        <div class="info-box" style="margin-top: 30px;">
-            <p><strong>📝 Cara Setup SheetDB:</strong></p>
-            <p>1. Buat Google Spreadsheet dengan header: Timestamp, Nama, Email, Prioritas1, Prioritas2, Prioritas3, Prioritas4, Prioritas5</p>
-            <p>2. Daftar di <a href="https://sheetdb.io" target="_blank" style="color: #0088cc;">https://sheetdb.io</a></p>
-            <p>3. Connect spreadsheet Anda dan copy API URL</p>
-            <p>4. Paste API URL di bagian JavaScript (cari: SHEETDB_API_URL)</p>
         </div>
     </div>
 
