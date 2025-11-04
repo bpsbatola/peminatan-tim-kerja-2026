@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminatan Tim Kerja 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 650px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #0088cc;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #0088cc;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #0088cc;
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #0066aa;
+            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+        }
+        
+        select:hover {
+            border-color: #0066aa;
+        }
+
+        select option:disabled {
+            color: #ccc;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f79d3d 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(230, 126, 34, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .view-results-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .view-results-btn:hover {
+            background: #0066aa;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border-left: 5px solid #4caf50;
+            display: none;
+        }
+
+        .result.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .result h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .result.error h2 {
+            color: #c62828;
+        }
+
+        .result ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .result li {
+            padding: 8px 0;
+            color: #1b5e20;
+            font-size: 15px;
+        }
+
+        .result li strong {
+            color: #0088cc;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0088cc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+
+        .warning-box p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #0088cc;
+            color: white;
+            font-weight: bold;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .data-table tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Peminatan Tim Kerja 2026</h1>
+        
+        <div class="warning-box" id="warningBox">
+            <p><strong>⚠️ PENTING:</strong> Anda perlu mengkonfigurasi SheetDB API URL terlebih dahulu. Lihat instruksi di bawah form.</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Petunjuk:</strong> Isi data diri Anda dan pilih 5 peminatan berdasarkan urutan prioritas. Setiap pilihan hanya bisa dipilih sekali.</p>
+        </div>
+
+        <form id="pollingForm">
+            <div class="question-group">
+                <label for="nama">Nama Lengkap *</label>
+                <select id="nama" required>
+                    <option value="">Pilih nama Anda</option>
+                    <option value="Agus Sutikno">Agus Sutikno</option>
+                    <option value="Ahmad Al Fajar">Ahmad Al Fajar</option>
+                    <option value="Akhmad Darso">Akhmad Darso</option>
+                    <option value="Anshrodin">Anshrodin</option>
+                    <option value="Ardiansyah">Ardiansyah</option>
+                    <option value="Azzahra Shyfa Dieni Islam">Azzahra Shyfa Dieni Islam</option>
+                    <option value="Badriansyah">Badriansyah</option>
+                    <option value="Diana Gusman">Diana Gusman</option>
+                    <option value="Dimas Ario Yudanko">Dimas Ario Yudanko</option>
+                    <option value="Diyang Gita Cendekia">Diyang Gita Cendekia</option>
+                    <option value="Edy Wiranto">Edy Wiranto</option>
+                    <option value="Fauzan Rais Arfizain">Fauzan Rais Arfizain</option>
+                    <option value="Gita Lestari">Gita Lestari</option>
+                    <option value="Gusti Agus Salim">Gusti Agus Salim</option>
+                    <option value="Hendera Faisal">Hendera Faisal</option>
+                    <option value="Hendri Yatno">Hendri Yatno</option>
+                    <option value="Husnul Wafa">Husnul Wafa</option>
+                    <option value="Ilham Habible Damar Adiwena">Ilham Habible Damar Adiwena</option>
+                    <option value="Irma Fatichatul Barkiyah">Irma Fatichatul Barkiyah</option>
+                    <option value="Muhammad Alifunnas">Muhammad Alifunnas</option>
+                    <option value="Muhammad Syadikin">Muhammad Syadikin</option>
+                    <option value="M.Yusuf.N">M.Yusuf.N</option>
+                    <option value="Nawawi Rusadi">Nawawi Rusadi</option>
+                    <option value="Noor Arifullah">Noor Arifullah</option>
+                    <option value="Norjannah">Norjannah</option>
+                    <option value="Nurliansyah">Nurliansyah</option>
+                    <option value="Popy Chafifah">Popy Chafifah</option>
+                    <option value="Pramita Pratiwi">Pramita Pratiwi</option>
+                    <option value="Rino Umi Kharomah">Rino Umi Kharomah</option>
+                    <option value="Rudolf Sondang">Rudolf Sondang</option>
+                    <option value="Salamat Anuari">Salamat Anuari</option>
+                    <option value="Sri Rohani">Sri Rohani</option>
+                    <option value="Tantri Retno Anasthasia">Tantri Retno Anasthasia</option>
+                    <option value="Taufikurrahman">Taufikurrahman</option>
+                    <option value="Zainal Abdi">Zainal Abdi</option>
+                </select>
+            </div>
+            <div class="question-group">
+                <label for="q1">Prioritas 1: Pilih peminatan pertama Anda *</label>
+                <select id="q1" required>
+                    <option value="">Pilih opsi</option>
+                    <option value="Sosial">Sosial</option>
+                    <option value="Distribusi">Distribusi</option>
+                    <option value="Produksi">Produksi</option>
+                    <option value="Nerusilis">Nerusilis</option>
+                    <option value="IPDS">IPDS</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label for="q2">Prioritas 2: Pilih peminatan kedua Anda *</label>
+                <select id="q2" required>
+                    <option value="">Pilih opsi</option>
+                    <option value="Sosial">Sosial</option>
+                    <option value="Distribusi">Distribusi</option>
+                    <option value="Produksi">Produksi</option>
+                    <option value="Nerusilis">Nerusilis</option>
+                    <option value="IPDS">IPDS</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label for="q3">Prioritas 3: Pilih peminatan ketiga Anda *</label>
+                <select id="q3" required>
+                    <option value="">Pilih opsi</option>
+                    <option value="Sosial">Sosial</option>
+                    <option value="Distribusi">Distribusi</option>
+                    <option value="Produksi">Produksi</option>
+                    <option value="Nerusilis">Nerusilis</option>
+                    <option value="IPDS">IPDS</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label for="q4">Prioritas 4: Pilih peminatan keempat Anda *</label>
+                <select id="q4" required>
+                    <option value="">Pilih opsi</option>
+                    <option value="Sosial">Sosial</option>
+                    <option value="Distribusi">Distribusi</option>
+                    <option value="Produksi">Produksi</option>
+                    <option value="Nerusilis">Nerusilis</option>
+                    <option value="IPDS">IPDS</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label for="q5">Prioritas 5: Pilih peminatan kelima Anda *</label>
+                <select id="q5" required>
+                    <option value="">Pilih opsi</option>
+                    <option value="Sosial">Sosial</option>
+                    <option value="Distribusi">Distribusi</option>
+                    <option value="Produksi">Produksi</option>
+                    <option value="Nerusilis">Nerusilis</option>
+                    <option value="IPDS">IPDS</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+        </form>
+
+        <button class="view-results-btn" onclick="viewResults()">Lihat Semua Data</button>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Memproses data...</p>
+        </div>
+
+        <div class="result" id="result">
+            <h2 id="resultTitle">Data berhasil disimpan!</h2>
+            <ul id="resultList"></ul>
+        </div>
+
+        <div class="info-box" style="margin-top: 30px;">
+            <p><strong>📝 Cara Setup SheetDB:</strong></p>
+            <p>1. Buat Google Spreadsheet dengan header: Timestamp, Nama, Email, Prioritas1, Prioritas2, Prioritas3, Prioritas4, Prioritas5</p>
+            <p>2. Daftar di <a href="https://sheetdb.io" target="_blank" style="color: #0088cc;">https://sheetdb.io</a></p>
+            <p>3. Connect spreadsheet Anda dan copy API URL</p>
+            <p>4. Paste API URL di bagian JavaScript (cari: SHEETDB_API_URL)</p>
+        </div>
+    </div>
+
+    <!-- Modal untuk menampilkan data -->
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="color: #0088cc; margin-bottom: 20px;">Data Peminatan Tim Kerja 2026</h2>
+            
+            <div class="stats-container" id="statsContainer"></div>
+            
+            <div style="overflow-x: auto;">
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Timestamp</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Prioritas 1</th>
+                            <th>Prioritas 2</th>
+                            <th>Prioritas 3</th>
+                            <th>Prioritas 4</th>
+                            <th>Prioritas 5</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== KONFIGURASI SHEETDB =====
+        // GANTI URL DI BAWAH INI DENGAN API URL SHEETDB ANDA
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/512vn3b1ggikb';
+        // Contoh: 'https://sheetdb.io/api/v1/58f61a4d53433'
+        // ================================
+
+        const selects = ['q1', 'q2', 'q3', 'q4', 'q5'];
+        const options = ['Sosial', 'Distribusi', 'Produksi', 'Nerusilis', 'IPDS'];
+
+        // Check if API URL is configured
+        if (SHEETDB_API_URL === 'https://sheetdb.io/api/v1/XXXXXX') {
+            console.warn('SheetDB API URL belum dikonfigurasi!');
+        } else {
+            document.getElementById('warningBox').style.display = 'none';
+        }
+
+        // Fungsi untuk update pilihan yang tersedia
+        function updateOptions() {
+            const selectedValues = [];
+            
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select.value) {
+                    selectedValues.push(select.value);
+                }
+            });
+
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                const currentValue = select.value;
+                
+                select.innerHTML = '<option value="">Pilih opsi</option>';
+                
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    
+                    if (selectedValues.includes(opt) && opt !== currentValue) {
+                        option.disabled = true;
+                        option.textContent = opt + ' (sudah dipilih)';
+                    }
+                    
+                    select.appendChild(option);
+                });
+                
+                if (currentValue) {
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        selects.forEach(id => {
+            document.getElementById(id).addEventListener('change', updateOptions);
+        });
+
+        // Handle form submission
+        document.getElementById('pollingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Check if API URL is configured
+            if (SHEETDB_API_URL === 'https://sheetdb.io/api/v1/XXXXXX') {
+                alert('Error: SheetDB API URL belum dikonfigurasi!\n\nSilakan ikuti instruksi setup di bawah form.');
+                return;
+            }
+            
+            const nama = document.getElementById('nama').value;
+            const email = document.getElementById('email').value.trim();
+            
+            const results = [];
+            let allFilled = true;
+            
+            selects.forEach((id, index) => {
+                const value = document.getElementById(id).value;
+                if (!value) {
+                    allFilled = false;
+                } else {
+                    results[index] = value;
+                }
+            });
+            
+            if (!nama || !email || !allFilled) {
+                alert('Mohon lengkapi semua data!');
+                return;
+            }
+            
+            // Tampilkan loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('result').style.display = 'none';
+            
+            // Siapkan data untuk dikirim ke SheetDB
+            const formData = {
+                data: {
+                    Timestamp: new Date().toLocaleString('id-ID', { 
+                        year: 'numeric', 
+                        month: '2-digit', 
+                        day: '2-digit',
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit'
+                    }),
+                    Nama: nama,
+                    Email: email,
+                    Prioritas1: results[0],
+                    Prioritas2: results[1],
+                    Prioritas3: results[2],
+                    Prioritas4: results[3],
+                    Prioritas5: results[4]
+                }
+            };
+            
+            try {
+                // Kirim data ke SheetDB
+                const response = await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(true, 'Data berhasil disimpan ke Google Sheets!', formData.data);
+                    
+                    // Reset form
+                    document.getElementById('pollingForm').reset();
+                } else {
+                    throw new Error(result.message || 'Gagal menyimpan data');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showResult(false, 'Terjadi kesalahan: ' + error.message + '\n\nPastikan API URL SheetDB sudah benar.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+
+        function showResult(success, title, data = null) {
+            const resultDiv = document.getElementById('result');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultList = document.getElementById('resultList');
+            
+            resultDiv.className = 'result';
+            if (!success) {
+                resultDiv.classList.add('error');
+            }
+            
+            resultTitle.textContent = title;
+            resultList.innerHTML = '';
+            
+            if (success && data) {
+                const items = [
+                    `<strong>Nama:</strong> ${data.Nama}`,
+                    `<strong>Email:</strong> ${data.Email}`,
+                    `<strong>Prioritas 1:</strong> ${data.Prioritas1}`,
+                    `<strong>Prioritas 2:</strong> ${data.Prioritas2}`,
+                    `<strong>Prioritas 3:</strong> ${data.Prioritas3}`,
+                    `<strong>Prioritas 4:</strong> ${data.Prioritas4}`,
+                    `<strong>Prioritas 5:</strong> ${data.Prioritas5}`
+                ];
+                
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = item;
+                    resultList.appendChild(li);
+                });
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fungsi untuk menampilkan semua data dari SheetDB
+        async function viewResults() {
+            // Check if API URL is configured
+            if (SHEETDB_API_URL === 'https://sheetdb.io/api/v1/XXXXXX') {
+                alert('Error: SheetDB API URL belum dikonfigurasi!\n\nSilakan ikuti instruksi setup di bawah form.');
+                return;
+            }
+
+            try {
+                document.getElementById('loading').style.display = 'block';
+                
+                // Ambil semua data dari SheetDB
+                const response = await fetch(SHEETDB_API_URL);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari SheetDB');
+                }
+                
+                if (!data || data.length === 0) {
+                    alert('Belum ada data polling yang tersimpan.');
+                    document.getElementById('loading').style.display = 'none';
+                    return;
+                }
+                
+                // Tampilkan data di modal
+                displayDataInModal(data);
+                document.getElementById('dataModal').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengambil data: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayDataInModal(data) {
+            const tableBody = document.getElementById('dataTableBody');
+            const statsContainer = document.getElementById('statsContainer');
+            
+            tableBody.innerHTML = '';
+            statsContainer.innerHTML = '';
+            
+            // Hitung statistik
+            const stats = {
+                total: data.length
+            };
+            
+            data.forEach((item, index) => {
+                // Tambahkan baris ke tabel
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.Timestamp || '-'}</td>
+                    <td>${item.Nama || '-'}</td>
+                    <td>${item.Email || '-'}</td>
+                    <td>${item.Prioritas1 || '-'}</td>
+                    <td>${item.Prioritas2 || '-'}</td>
+                    <td>${item.Prioritas3 || '-'}</td>
+                    <td>${item.Prioritas4 || '-'}</td>
+                    <td>${item.Prioritas5 || '-'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Tampilkan statistik
+            const statCard = document.createElement('div');
+            statCard.className = 'stat-card';
+            statCard.innerHTML = `
+                <h3>${stats.total}</h3>
+                <p>Total Responden</p>
+            `;
+            statsContainer.appendChild(statCard);
+        }
+
+        function closeModal() {
+            document.getElementById('dataModal').style.display = 'none';
+        }
+
+        // Tutup modal jika klik di luar modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('dataModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
